@@ -2,7 +2,6 @@ provider "aws" {
   region = "us-east-2"
 }
 
-
 module "asg" {
   source  = "terraform-aws-modules/autoscaling/aws"
 
@@ -11,7 +10,7 @@ module "asg" {
 
   min_size                  = 2
   max_size                  = 4
-  desired_capacity          = 4
+  desired_capacity          = 2
   wait_for_capacity_timeout = 0
   health_check_type         = "EC2"
   availability_zones        = ["us-east-2a", "us-east-2b", "us-east-2c"]
@@ -27,5 +26,3 @@ module "asg" {
   ebs_optimized     = true
   enable_monitoring = true
 }
-
- 

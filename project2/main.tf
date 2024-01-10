@@ -1,26 +1,24 @@
 provider "aws" {
-  region = "us-east-2"
+  region = var.region
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "deployer-key"
+  key_name   = var.key_name
   public_key = file("~/.ssh/id_rsa.pub")
 }
 
-resource "aws_vpc" "group2" {
-  cidr_block       = "10.0.0.0/16"
+resource "aws_vpc" "group-2" {
+  cidr_block = var.vpc_cidr
   instance_tenancy = "default"
-
   tags = {
-    Name = "group-2"
+    Name = var.vpc_name
   }
 }
 
 resource "aws_subnet" "s1" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id     = aws_vpc.group-2.id
+  cidr_block = var.subnet1_cidr 
   availability_zone = "us-east-2a"
-  map_customer_owned_ip_on_launch = true
 
   tags = {
     Name = "subnet1"
@@ -28,21 +26,19 @@ resource "aws_subnet" "s1" {
 }
 
 resource "aws_subnet" "s2" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.2.0/24"
+  vpc_id     = aws_vpc.group-2.id
+  cidr_block = var.subnet2_cidr
   availability_zone = "us-east-2b"
-  map_customer_owned_ip_on_launch = true
-
-  tags = {
+  
+   tags = {
     Name = "subnet2"
   }
 }
 
 resource "aws_subnet" "s3" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.3.0/24"
+  vpc_id     = aws_vpc.group-2.id
+  cidr_block = var.subnet3_cidr
   availability_zone = "us-east-2c"
-  map_customer_owned_ip_on_launch = true
 
   tags = {
     Name = "subnet3"
@@ -51,7 +47,7 @@ resource "aws_subnet" "s3" {
 
 
 resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.group2.id
+  vpc_id = aws_vpc.group-2.id
 
   tags = {
     Name = "group2-igw"
@@ -59,7 +55,7 @@ resource "aws_internet_gateway" "gw" {
 }
 
 resource "aws_route_table" "rt" {
-  vpc_id = aws_vpc.group2.id
+  vpc_id = aws_vpc.group-2.id
 
   route {
     cidr_block = "0.0.0.0/0"

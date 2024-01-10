@@ -58,10 +58,9 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "group-2" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+  instance_type = var.instance_type
   availability_zone = "us-east-2a"
   vpc_security_group_ids = [aws_security_group.group-2.id]
   key_name = aws_key_pair.deployer.key_name
   user_data = file("gitlab.sh")
-  # count = 3
 }

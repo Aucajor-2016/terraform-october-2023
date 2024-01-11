@@ -1,5 +1,5 @@
 # terraform-october-2023
-
+<!-- 
 module "vpc" {
 
     region = "us-east-2"
@@ -11,4 +11,4 @@ module "vpc" {
     subnet3_cidr = "10.0.3.0/24"
     instance_type = "t2.micro"
     type = true
-}
+} -->
